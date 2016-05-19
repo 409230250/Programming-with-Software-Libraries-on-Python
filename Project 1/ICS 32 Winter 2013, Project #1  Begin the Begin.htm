@@ -1,0 +1,248 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!-- saved from url=(0061)http://www.ics.uci.edu/~thornton/ics32/ProjectGuide/Project1/ -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link rel="stylesheet" href="./ICS 32 Winter 2013, Project #1  Begin the Begin_files/course.css" type="text/css">
+
+<title>ICS 32 Winter 2013, Project #1: Begin the Begin</title>
+</head>
+
+<body>
+
+<div class="navbar">
+
+<p>
+ICS 32 Winter 2013 |
+<a href="http://www.ics.uci.edu/~thornton/ics32/index.html">News</a> |
+<a href="http://www.ics.uci.edu/~thornton/ics32/CourseReference.html">Course Reference</a> |
+<a href="http://www.ics.uci.edu/~thornton/ics32/Schedule.html">Schedule</a> |
+<a href="http://www.ics.uci.edu/~thornton/ics32/ProjectGuide">Project Guide</a> |
+<a href="http://www.ics.uci.edu/~thornton/ics32/CodeExamples">Code Examples</a> |
+<a href="http://www.ics.uci.edu/~thornton/">About Alex</a>
+</p>
+
+<hr>
+
+</div>
+
+<div class="header">
+
+<p>ICS 32 Winter 2013<br>
+   Project #1: <i>Begin the Begin</i></p>
+
+</div>
+
+<div class="section">
+
+<p class="center"><b>Due date and time:</b> <i>Friday, January 18, 11:59pm</i></p>
+
+<p class="center"><i>This project is to be done in pairs using the "pair programming" technique</i></p>
+
+</div>
+
+<div class="section">
+
+<hr>
+
+<p class="title">Introduction</p>
+
+<p>While there are clear differences between the operating systems that run personal computers, one of the things that they all have in common is the notion of a <i>file system</i>, whose role is to manage the creation, arrangement, updating, and deletion of files.  Storage devices such as hard drives and USB sticks are actually a lot more complicated than they look, but a file system provides an abstraction over that complexity, replacing it with a few simple concepts like <i>files</i>, <i>directories</i>, and <i>paths</i>.</p>
+
+<p>Like many programming language libraries, Python's standard library provides a pre-built implementation of a variety of file system operations.  It is possible to create files, copy and move files, search in directories, and manipulate paths; once you know the abstract concepts that a file system is centered around, you can use Python's standard library to access a file system in terms of those same abstract concepts.</p>
+
+<p>This project will give you a chance to explore a few parts of the Python standard library that you may not have seen before; provide practice in reading and digesting technical documentation in order to determine what functions in the standard library are appropriate in helping you to solve a problem; introduce you to some features of Python you might not have had the opportunity to use before, such as exception handling; and ask you to use recursion to traverse a recursive data structure (in this case, the file system).</p>
+
+</div>
+
+<div class="section">
+
+<hr>
+
+<p class="title">File systems</p>
+
+<p>Whether you run Windows, Mac OS X, or some flavor of Linux, you've no doubt had experience with at least some of the following concepts.</p>
+
+<ul>
+  <li>A <i>file system</i> is software that manages how information is stored on a storage device such as a hard drive.</li>
+  <li>Information is stored in <i>files</i>, which are containers in which a sequence of <i>bytes</i> are stored.  The bytes in each file are interpreted differently depending on what kind of file it is (i.e., what the user of the file expects it to contain, such as text, an image, a song, or a video).</li>
+  <li>Each file has a <i>filename</i> that can be used to identify it.  While some operating systems treat files differently depending on their names — most especially an <i>extension</i>, which is the part of the filename that follows the last dot (e.g., <b>.doc</b> in the filename <b>invoice.doc</b>) — there is not necessarily a relationship between the name of a file and the kind of data it contains.
+    <ul>
+      <li><i>Side note: If you're running Windows on your own machine, have you completed <a href="http://www.ics.uci.edu/~thornton/ics32/ProjectGuide/Assignment0">Assignment #0</a> yet?  In particular, Step 1 of the installation instructions for Windows is not to be overlooked; it's going to be really important in the context of this project!  Windows, by default, hides filename extensions in its user interface, but we're going to need to see the filenames for what they are.</i></li>
+    </ul>
+  </li>
+  <li>Files are arranged into <i>directories</i> (also called <i>folders</i>, but we'll settle on one terminology and call them "directories").  Like files, directories have names.</li>
+  <li>Directories can contain not only files but other directories, which can, in turn, contain other directories, and so on.  A directory inside of another directory is generally called a <i>subdirectory</i>.</li>
+  <li>The rules that govern directories are, more or less, the same as the rules that govern the directories inside of them, except for one special directory called the <i>root</i>, which forms a kind of starting point for a search; the root directory is the one directory on a device that is not inside another directory.</li>
+  <li>More than one file or directory on a device can have the same name; they are instead identified more precisely by a <i>path</i>, which indicates the sequence of directories, starting from the root, one would have to descend into in order to find a file or directory.  While the concept of a path transcends operating systems, they are written a bit differently on different ones.</li>
+  <li>Instead of storing a file in a directory, you can also store a <i>symbolic link</i> that points to another file stored in some other directory, which allows the same file to appear in more than one directory.  Similarly, a directory can contain a symbolic link to another directory (and this can get a little bit strange, such as directories that link back to their parent or even to themselves)
+    <ul>
+      <li>This project won't require you to handle symbolic links, though you're welcome to take a crack at it if you're so inclined.  Do be aware, though, that it may not be easily possible to create them on Windows — it can be done, but requires tweaking security settings, and would require administrative access to your machine, which means you wouldn't be able to do it in the ICS labs.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>If most of these terms seem unfamiliar, it's worth doing a bit of research and experimentation to be sure you understand what they are before you proceed too far through this project.  In addition to being useful in the context of the problem at hand, this is good practical knowledge that you'll need if you want to be successful as a programmer.</p>
+
+</div>
+
+<div class="section">
+
+<hr>
+
+<p class="title">The program</p>
+
+<p>The program you'll be writing for this project is one that can search for files in a directory (and all of its subdirectories, and their subdirectories, and so on) with interesting characteristics and take some kind of action on those files.  Both the notion of <i>interesting characteristics</i> and <i>taking action</i> will be configurable and can each work in a few different ways, but the core act of finding all files will always be the same.</p>
+
+<p class="subtitle">The user interface</p>
+
+<p>When executed, your program should interact with the user by printing to the console and reading input from the console (e.g., using the <b>print()</b> and <b>input</b> functions).  It should do the following:</p>
+
+<ul>
+  <li>Ask the user to specify the path to the directory in which the search for files should be rooted.  For example, on Windows, a user might type <b>C:\Program Files</b> or <b>D:\Python33\Lib</b>, in which case only files in or "underneath" the chosen directory will be found.
+    <ul>
+      <li>If the specified directory does not exist, print an error message and ask the user to specify another directory.</li>
+    </ul>
+  </li><li>Ask the user which of these <i>search characteristics</i> to use in deciding whether files are "interesting" and should have action taken on them.
+    <ul>
+      <li><b>Search by Name</b>.  Files whose names exactly match a particular name.  If the user chooses this characteristic, ask what filename they'd like to search for.  For example, if the user specifies <b>boo.jpg</b>, only files whose names are exactly <b>boo.jpg</b> will be considered interesting.</li>
+      <li><b>Search by Name Ending</b>.  Files whose names end with a particular string.  If the user chooses this characteristic, ask what ending they'd like to search for.  For example, if the user specifies <b>.py</b>, all files whose names end in <b>.py</b> will be considered interesting.</li>
+      <li><b>Search by Size</b>.  Files whose size, measured in bytes, exceeds a specified limit.  If the user chooses this characteristic, ask what that limit should be.  For example, if the user specifies <b>2097151</b>, files whose sizes are at least 2,097,152 bytes will be considered interesting.</li>
+    </ul>
+  </li>
+  <li>Ask the user which of these <i>actions</i> should be taken on each of the interesting files.  Always print the file's path to the console, on its own line of output, before taking the action, so it will be clear what files, if any, were affected.
+    <ul>
+      <li><b>Print Path Only</b>.  Print the file's path to the console, but don't otherwise do anything with it.</li>
+      <li><b>Print First Line of Text</b>.  Open the file, assuming that it's a text file, read the first line of text from the file and print that text to the console.</li>
+      <li><b>Copy File</b>.  Make a copy of the file and store it in the same directory where the original resides, but the copy should have <b>.copy</b> appended to the filename.  For example, if the interesting file is <b>C:\pictures\boo.jpg</b>, you could copy it to <b>C:\pictures\boo.jpg.copy</b>.</li>
+      <li><b>Touch File</b>.  "Touch" the file, which means to modify its last modified timestamp to be the current date/time.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Whenever the user is asked to specify input, remove spaces from the beginning and end of whatever was typed before doing anything.  If, after removing the spaces, the input is empty, does not match an available choice, or is the wrong type (e.g., a number is expected and the user types <b>alex</b>), print an error message and ask the user to try again.  Your program should not crash as a result of incorrect input from the user.</p>
+
+<p class="subtitle">Running the search and taking action</p>
+
+<p>Your search should look for files in the directory where the user asked for the search to be rooted, in any subdirectories of that directory, in any of their subdirectories, and so on, for as deep as the directory structure goes.</p>
+
+<p>Outside of the occurrence of symbolic links, which we're ignoring for the purposes of this project, directory structures are hierarchical (i.e., directories have subdirectories inside of them, and those subdirectories have the same structure as their "parents").</p>
+
+<p>In general, the order in which you take action on files is not important, so long as every interesting file has the action taken on it exactly once.</p>
+
+<p class="subtitle">Handling failure</p>
+
+<p>You'll want to handle failure carefully in this program.  In general, your program should not crash just because one activity fails; it should instead note the failure (by printing a readable message to the console) and continue, if possible.  For example:</p>
+
+<ul>
+  <li>If, during the search, accessing some directory fails, the search should still continue attempting to access other directories.</li>
+  <li>If taking action on an interesting file fails, the program should continue processing additional interesting files.</li>
+</ul>
+
+<p class="subtitle">Organization of your program</p>
+
+<p>Your program should be written in a single Python module (i.e., a single <b>.py</b> file).  You can feel free to name the file anything you'd like, but running your module (e.g., by loading it in IDLE and pressing F5 or selecting <b>Run Module</b> from the <b>Run</b> menu) should result in your program being executed and your user interface being displayed, but importing your module manually using an <b>import</b> statement should not.  The way to differentiate between these scenarios is to write an <b>if</b> statement, outside of any function (and usually at the bottom of your module), that looks like this:</p>
+
+<blockquote><pre>if __name__ == '__main__':
+    <i>the_things_you_want_to_happen_only_when_the_module_is_run</i>
+</pre></blockquote>
+
+<p>The expression <b>__name__ == '__main__'</b> will only return <b>True</b> if the module is being executed; it will be <b>False</b> when the module is being imported instead.</p>
+
+<p class="subtitle">An important design goal</p>
+
+<p>As you write your program, you'll want to be on the lookout for complex functions that can be made simpler by breaking them up into multiple smaller functions.  Taking complexity and putting it into a function with a well-chosen name and clearly-named parameters is a great way to tame that complexity; this is the first step in building an ability to write significantly larger programs than you've written so far, so be sure that you're getting some practice in taking that step in this project.  One of the criteria we'll use in grading your project is to assess the quality of its design; in this project, the largest factor affecting quality is the extent to which functions were broken up when they are long or cumbersome.</p>
+
+</div>
+
+<div class="section">
+
+<hr>
+
+<p class="title">The Python Standard Library documentation</p>
+
+<p>At <b>python.org</b>, you'll find a comprehensive set of documentation about the Python language and its standard library.  Two good places to start are these pages:</p>
+
+<ul>
+  <li><a href="http://docs.python.org/3/">Python 3.3.0 documentation</a></li><a href="http://docs.python.org/3/">
+  </a><li><a href="http://docs.python.org/3/"></a><a href="http://docs.python.org/3/library/index.html">Python 3.3.0 Standard Library documentation</a></li>
+</ul>
+
+<p>You'll probably need to spend a fair amount of time, especially early in your work on this project, looking at the Standard Library documentation and assessing what functions in that library might be able to assist you in your solution.  The Standard Library documentation is mostly broken down by module.  It's tough sometimes to know where to look, as there are so many modules, so we'll sometimes try to point you in the right direction.  For this project, you'll want to pay special attention to (at least) these modules: <b>os</b>, <b>os.path</b>, and <b>stat</b>, though you might also find useful tools in other modules.  Feel free to poke around and see what's available; if it's in the Standard Library, you can feel free to use it.</p>
+
+<p>Note, too, that part of understanding what's available in the Standard Library is careful, targeted experimentation.  If you're not sure what a library function does just by reading its documentation, you can fire up IDLE and experiment with it; one of the nice things about an interpreted programming language like Python is that this experimentation can be done in the interpreter, without having to make changes to your program until you're more sure that you've found library functions that will help.</p>
+
+<p class="subtitle">A note about versioning</p>
+
+<p>As you're reading through Python's documentation, be sure that you're ready the right version of it.  Near the top of each page is a drop-down list that allows you to select a version.  Be sure you're reading the documentation for version 3.3.0.  (In particular, if search engines lead you to Python documentation, you'll find that they quite often lead you to the documentation for older versions of Python than 3.3.0, which is relatively new.  But you can usually just select "3.3.0" in the drop-down list in order to bring up the corresponding page of the documentation for our version of Python.)</p>
+
+<p class="subtitle">Limitations on what you can use</p>
+
+<p>For the most part, if you find a function that can assist in your solution, you can feel free to use it; note that some care is sometimes required in ensuring that the function you find is actually a good fit.</p>
+
+<p>There are two functions in the Python Standard Library that are off-limits for your use in this project: <b>os.walk</b> and <b>os.fwalk</b>, both of which perform a full traversal of files in a directory structure, which is one of the skills I'd like you to build in this project.  (In general, it's safe to assume that you can use anything I don't specifically call out as being off-limits.)</p>
+
+</div>
+
+<div class="section">
+
+<hr>
+
+<p class="title">The value of working incrementally</p>
+
+<p>You may be accustomed to solving relatively small, mostly self-contained problems that you can handle all at once.  This program, while not giant by real-world standards, consists of more moving parts than you might be used to writing, so you will likely find that attempting to write this program all at once will lead you astray.</p>
+
+<p>A better approach for this project — and one that will increase in importance this quarter, as the problems we solve get larger and more complex — is to look for stable ground as often as you can find it.  Rather than trying to write the entire program, write some small part of it, then find a way to verify that the part you wrote works as you expected.  When it does, you've reached stable ground, and you're ready to choose the next small step you should take, again taking care to choose something that you'll be able to verify after you're done with it.  Ideally, you'll find yourself reaching stable ground quite often — every few minutes, if things are going well — and this will help you to feel confident that you're making progress.</p>
+
+<p>Also, when you reach what you believe to be stable ground, it's not a bad idea to make a copy of your Python module before proceeding.  That way, if your next step doesn't go as you planned, you maintain the option of "rolling back" to the previous, stable version and trying again.  It also gives you something stable to turn in if you find that the deadline arrives and you're not finished; it's always better to turn in a partial program that does <i>something</i> correctly, rather than one that doesn't run.  Don't feel like you need to keep <i>every</i> stable version, but it's not a bad idea to at least have the most recent one.  (One of the practical skills you'll need to start thinking about, if you haven't already, is staying organized.  If you have a couple of versions of a file and find that you're often not sure which is which, then you need a better organizational scheme — better file names, better directory names, or whatever helps it to be more obvious to you.)</p>
+
+<p class="subtitle">So, what steps should I take?</p>
+
+<p>There are a variety of ways to build this program from beginning to end, so don't go looking for the "perfect way" to do it.  Find a small step you can take, take it, and then find another.  Of course, there are missteps you might take along the way, but the best way to learn how to write programs this way is simply to do it; you'll learn as much from your missteps as you will from the ones that work out well.</p>
+
+<p>As an example, though, think about the fact that the program is built around the core notion of "Find all of the unique files in a directory, its subdirectories, their subdirectories, and so on."  That sounds like a pretty good step to start with, except that it's actually a bigger step than it sounds like.  So you could start even smaller: write a function that finds the files in a directory but ignores subdirectories.  Once you can do that, add handling for one level of subdirectories (but assume they have no subdirectories inside of them).  Then consider unbounded subdirectory depth and handle that scenario.</p>
+
+<p>Whenever you're working on something and you feel you've bitten off more than you can chew, think about ways to break the problem into smaller ones; eventually, you'll be left with a problem you can think through and complete.</p>
+
+</div>
+
+<div class="section">
+
+<hr>
+
+<p class="title">Testing</p>
+
+<p>Testing this program is going to seem cumbersome, because it will require creating directory structures and files in various configurations, then running the program to see how it behaves.  You might find that it's worth your time to automate some scenarios, by writing short Python functions (perhaps in a separate module) that create directories and files in interesting combinations.  You won't likely find that it will require writing a lot of code, but it will pay you back (and then some!) as you test your program.</p>
+
+<p>It's quite common in real-world software development to write code whose sole use is as a development tool; it's not part of the program, per se, and will not be given to users of the program, but is strictly meant to make it easier to build the program.  You'll be well-served to explore ways to use Python to lighten your testing burden; if there are five interesting scenarios you've identified, you should write five Python functions that can set them up for you automatically, so you can get them back any time you need to test them.</p>
+
+</div>
+
+<div class="section">
+
+<hr>
+
+<p class="title">Deliverables</p>
+
+<p>Only one of the two partners should submit the project; we are aware of the partnerships, so we will be able to figure out which project submissions belong to which pairing.  Put the names and student IDs of both partners in a comment at the top of each of your one and only <b>.py</b> file, then submit the file to Checkmate.</p>
+
+<p>Follow <a href="http://www.ics.uci.edu/~thornton/ics32/ProjectGuide/SubmittingProjects.html">this link</a> for a discussion of how to submit your project via Checkmate.  Be aware that I'll be holding you to all of the rules specified in that document, including the one that says that you're responsible for submitting the version of the project that you want greaded.  We won't regrade a project simply because you submitted the wrong version accidentally.</p>
+
+<p class="subtitle">Can I submit after the deadline?</p>
+
+<p>Yes, it is possible, subject to the late work policy for this course, which is described in the section titled <i>Late work</i> at <a href="http://www.ics.uci.edu/~thornton/ics32/ProjectGuide/index.html">this link</a>.</p>
+
+</div>
+
+<div class="history">
+
+<hr>
+
+<ul class="nomarker">
+  <li>Originally written by Alex Thornton, Winter 2013.</li>
+</ul>
+
+</div>
+
+
+
+</body></html>

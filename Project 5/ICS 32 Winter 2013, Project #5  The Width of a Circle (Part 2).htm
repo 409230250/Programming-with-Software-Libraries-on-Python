@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!-- saved from url=(0061)http://www.ics.uci.edu/~thornton/ics32/ProjectGuide/Project5/ -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link rel="stylesheet" href="./ICS 32 Winter 2013, Project #5  The Width of a Circle (Part 2)_files/course.css" type="text/css">
+
+<title>ICS 32 Winter 2013, Project #5: The Width of a Circle (Part 2)</title>
+<style type="text/css"></style></head>
+
+<body>
+
+<div class="navbar">
+
+<p>
+ICS 32 Winter 2013 |
+<a href="http://www.ics.uci.edu/~thornton/ics32/index.html">News</a> |
+<a href="http://www.ics.uci.edu/~thornton/ics32/CourseReference.html">Course Reference</a> |
+<a href="http://www.ics.uci.edu/~thornton/ics32/Schedule.html">Schedule</a> |
+<a href="http://www.ics.uci.edu/~thornton/ics32/ProjectGuide">Project Guide</a> |
+<a href="http://www.ics.uci.edu/~thornton/ics32/CodeExamples">Code Examples</a> |
+<a href="http://www.ics.uci.edu/~thornton/">About Alex</a>
+</p>
+
+<hr>
+
+</div>
+
+<div class="header">
+
+<p>ICS 32 Winter 2013<br>
+   Project #5: <i>The Width of a Circle (Part 2)</i></p>
+
+</div>
+
+<div class="section">
+
+<p class="center"><b>Due date and time:</b> <i>Friday, March 15, 11:59pm</i></p>
+
+<p class="center"><i>This project is to be done individually</i></p>
+
+</div>
+
+<div class="section">
+
+<hr>
+
+<p class="title">Background</p>
+
+<p>In the <a href="http://www.ics.uci.edu/~thornton/ics32/ProjectGuide/Project4">previous project</a>, you implemented an Othello game with a console-mode user interface, in the spirit of the user interfaces we've been building all quarter.  However, when you compare that program to the kinds of programs you use on a daily basis, it's not hard to see that there's something missing, that your Othello game was less satisfying than the kinds of software you interact with.</p>
+
+<p>In recent lectures, we've been learning about <b>tkinter</b>, a library built into Python that provides the ability to build programs with graphical user interfaces in Python.  This project asks you to take the program you wrote for the <a href="http://www.ics.uci.edu/~thornton/ics32/ProjectGuide/Project4">previous project</a> and replace its user interface with a graphical one.  You'll build your graphical user interface using <b>tkinter</b>, as we've been doing in lecture, but the program will otherwise preserve its underlying spirit; users will have the same set of options and will play the same game, but the look and feel of the game will be more realistic.  Having completed this task, you'll have taken a step toward building the kinds of software you use every day.</p>
+
+</div>
+
+<div class="section">
+
+<hr>
+
+<p class="title">The program</p>
+
+<p>This project asks you to build a graphical user interface that implements the same Othello game as the <a href="http://www.ics.uci.edu/~thornton/ics32/ProjectGuide/Project4">previous project</a>.  As before, the user will begin by selecting a set of options that configure how the game will be played; the game will then be played by asking users to make moves in a graphical window, continuing untli the game is complete, at which point the game has ended and the window can be dismissed.</p>
+
+<p class="subtitle">Some details about the GUI-based version of Othello</p>
+
+<p>Your GUI-based version of Othello will begin by asking users to make the same choices as in the <a href="http://www.ics.uci.edu/~thornton/ics32/ProjectGuide/Project4">previous project</a>.  You have some leeway in how you design the part of the GUI that asks these questions, but the input will need to be provided in a reasonable, convenient way in the GUI, not via the console; the look and feel is up to you, but try to provide something that would be convenient for a user.</p>
+
+<ul>
+  <li>How many rows are on the board, an <i>even integer</i> between 4 and 16 inclusive</li>
+  <li>How many columns are on the board, an <i>even integer</i> between 4 and 16 inclusive, which <i>does not</i> have to be the same as the number of rows</li>
+  <li>Which player — black or white — will move first</li>
+  <li>The arrangement of the four discs in the center of the grid at the beginning of the game — black in the upper-left of the four cells with discs, or white?</li>
+  <li>Whether the game will be won by the player with more discs or fewer discs (one or the other, but not both)</li>
+</ul>
+
+<p>Once the game begins, the GUI should display the current score (i.e., how many discs of each color are on the board), a clean representation of the game  board as a grid with discs colored either black or white, and an indication of whose turn it is to move (black or white).  The user is permitted to make a move by clicking one of the squares on the grid, though the move will only be allowed if it is valid; once a valid move is made, the board is updated to reflect the necessary changes (i.e., which discs are flipped, etc.).</p>
+
+<p>When the game is over, display three things in the GUI: the score, the final game board, and who the winner is.  Be sure to handle the case where there is no winner (i.e., the number of discs on the board for both players is equal at the end of the game).</p>
+
+<p>At this point, you can simply wait for the user to dismiss the window, or you can optionally offer the user the choice to play another game.</p>
+
+</div>
+
+<div class="section">
+
+<hr>
+
+<p class="title">Approaching the problem</p>
+
+<p class="subtitle">Your game logic</p>
+
+<p>If you have a complete set of game logic from the <a href="http://www.ics.uci.edu/~thornton/ics32/ProjectGuide/Project4">previous project</a>, you'll find that your task this time is primary one of visualization and taking input.  Your game logic, if designed appropriately before, should be usable without modification.  If parts were missing, or if your design turns out to be incompatible with your GUI implementation, you may, on the other hand, find yourself needing to make changes.</p>
+
+<p class="subtitle">Module design</p>
+
+<p>As before, you are required to keep the code that implements the game logic entirely separate from the code that implements your GUI.  To that end, <i>you will be required</i> to submit at least two modules: one that implements your game logic and another that implements your GUI.  You're welcome to break these two modules up further if you find it beneficial, but the requirement is to keep these two parts of your program — the logic and the user interface — separate.</p>
+
+<p>At least one of your modules should be executable (i.e., should contain an <b>if __name__ == '__main__':</b> block), namely the one that you would execute if you wanted to launch your GUI and play your game.</p>
+
+<p class="subtitle">Using classes to implement your GUI</p>
+
+<p>Because your event handlers will need access to the game's current state, your GUI should be implemented as one or more classes, in the style we've been discussing in recent lectures, with (at least) an object representing the application; you may also find it useful to have additional kinds of objects that represent parts of your GUI, but this is up to you to decide and is not a requirement.</p>
+
+<p class="subtitle">Drawing the game board and resizing the GUI's root window</p>
+
+<p>You are not permitted to represent the game board using built-in widgets like buttons.  Instead, you'll need to draw it on a Canvas widget programmatically.  Additionally, your GUI's root window must support resizing, and resizing it must cause the area in which the board is drawn to change size correspondingly, with the game board redrawn to fill the available space, so the user can decide how large of a window he or she would like to play the game on.</p>
+
+</div>
+
+<div class="section">
+
+<hr>
+
+<p class="title">Where to find more information about tkinter</p>
+
+<p>When you want to know more about the <b>tkinter</b> library, there are two places where you can get a lot of good information.  Almost surely, you'll want to do things in your own GUIs that we didn't end up having time to cover in lecture and don't show up in these code examples, so these are the places to go if you want to find out more.  In general, I'm happy to help, though you'll find that my knowledge of this library is not encyclopedic, so there's a chance you'll stump me and I'll send you to the places linked below.</p>
+
+<ul>
+  <li>A good place to start is Chapter 9 of the Perkovic text that I recommended for this course (and was used in ICS 31).  While it's not an exhaustive look at <b>tkinter</b>, it covers the basic concepts that <b>tkinter</b> is built around in more detail than you'll see in each lecture or in these code examples.</li>
+  <li>The <a href="http://infohost.nmt.edu/tcc/help/pubs/tkinter/web/index.html">tkinter 8.5 Reference</a> from New Mexico Tech Computer Center is a more comprehensive reference book — weighing in at over 160 pages in its <a href="http://www.nmt.edu/tcc/help/pubs/tkinter/tkinter.pdf">printable PDF version</a> — that will tell you absolutely everything you would want to know about <b>tkinter</b>.
+    <ul>
+      <li>The one thing to be cautious about is that its Python code examples use an older version of the Python language (Python 2) that differs from the version we're using (Python 3) in a number of (mostly minor) ways, so you'll need to be cognizant of these differences.</li>
+    </ul>
+  </li>
+</ul>
+
+</div>
+
+<div class="section">
+
+<hr>
+
+<p class="title">A word about the use of outside resources</p>
+
+<p>I am aware that there are existing versions of Othello written in Python that are available online.  It should go without saying that you are not permitted to download these and submit them as your own, in whole or in part, and that you are not permitted to use them as any kind of basis for your own work, but prior experience has taught me otherwise.  I generally like to keep a pretty open policy about outside resources when it's pedagogically wise, but other implementations of Othello are strictly off-limits in your work on this project. Be aware that a variety of existing implementations found online will be included in the plagiarism detection that we do after your work is submitted.</p>
+
+<p>Additionally, be aware that you are allowed to reuse <i>your own</i> game logic from <a href="http://www.ics.uci.edu/~thornton/ics32/ProjectGuide/Project4">Project #4</a>, but you are not permitted to use someone else's if you were unable to finish your own.</p>
+
+</div>
+
+<div class="section">
+
+<hr>
+
+<p class="title">Deliverables</p>
+
+<p>Put your name and student ID in a comment at the top of each of your <b>.py</b> files, then submit all of the files to Checkmate.  Take a moment to be sure that you've submitted all of your files.</p>
+
+<p>Follow <a href="http://www.ics.uci.edu/~thornton/ics32/ProjectGuide/SubmittingProjects.html">this link</a> for a discussion of how to submit your project via Checkmate.  Be aware that I'll be holding you to all of the rules specified in that document, including the one that says that you're responsible for submitting the version of the project that you want greaded.  We won't regrade a project simply because you submitted the wrong version accidentally.</p>
+
+<p class="subtitle">Can I submit after the deadline?</p>
+
+<p>Yes, it is possible, subject to the late work policy for this course, which is described in the section titled <i>Late work</i> at <a href="http://www.ics.uci.edu/~thornton/ics32/ProjectGuide/index.html">this link</a>.</p>
+
+</div>
+
+<div class="history">
+
+<hr>
+
+<ul class="nomarker">
+  <li>Originally written by Alex Thornton, Winter 2013, with some influence from <i>Games Without Frontiers</i> and <i>Black and White</i>, also written by Alex Thornton.</li>
+</ul>
+
+</div>
+
+
+
+</body></html>

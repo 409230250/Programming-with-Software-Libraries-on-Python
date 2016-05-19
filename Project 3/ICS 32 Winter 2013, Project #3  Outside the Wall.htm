@@ -1,0 +1,282 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!-- saved from url=(0061)http://www.ics.uci.edu/~thornton/ics32/ProjectGuide/Project3/ -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link rel="stylesheet" href="./ICS 32 Winter 2013, Project #3  Outside the Wall_files/course.css" type="text/css">
+
+<title>ICS 32 Winter 2013, Project #3: Outside the Wall</title>
+<style type="text/css"></style></head>
+
+<body>
+
+<div class="navbar">
+
+<p>
+ICS 32 Winter 2013 |
+<a href="http://www.ics.uci.edu/~thornton/ics32/index.html">News</a> |
+<a href="http://www.ics.uci.edu/~thornton/ics32/CourseReference.html">Course Reference</a> |
+<a href="http://www.ics.uci.edu/~thornton/ics32/Schedule.html">Schedule</a> |
+<a href="http://www.ics.uci.edu/~thornton/ics32/ProjectGuide">Project Guide</a> |
+<a href="http://www.ics.uci.edu/~thornton/ics32/CodeExamples">Code Examples</a> |
+<a href="http://www.ics.uci.edu/~thornton/">About Alex</a>
+</p>
+
+<hr>
+
+</div>
+
+<div class="header">
+
+<p>ICS 32 Winter 2013<br>
+   Project #3: <i>Outside the Wall</i></p>
+
+</div>
+
+<div class="section">
+
+<p class="center"><b>Due date and time:</b> <i>Tuesday, February 19, 11:59pm</i></p>
+
+<p class="center"><i>This project is to be done individually</i></p>
+
+</div>
+
+<div class="section">
+
+<hr>
+
+<p class="title">Background</p>
+
+<p>We saw in the previous project that our Python programs are capable of connecting to the "outside world" around them — to other programs running on the same machine, or even to other programs running on different machines in faraway places.  This is a powerful thing for a program to be able to do, because it is no longer limited to taking its input from a user or from a file stored locally; its input is now potentially anything that's public accessible via the Internet, making it possible to solve a vast array of new problems.</p>
+
+<p>Once you have the tool of connecting programs to one another in your toolbox, a whole new world opens up: suddenly, the idea that you should be able to write a program that combines, say, Google search queries, the Internet Movie Database, and your favorite social network to find people who like movies similar to the ones you like doesn't seem so far-fetched.</p>
+
+<p>The challenge in getting programs to share information is twofold.  Firstly, there's purely a software engineering problem: a protocol has to be designed that both programs can use to have their conversation.  Secondly, there's a social problem: if the same person (or group of people) isn't writing both programs, it's necessary for them to agree on the protocol ahead of time, then to implement it.  This is a potentially catastrophic problem — how could you ever get Google to agree to use your protocol just to communicate with you? — that is largely solved by the presence of <i>standards</i>, such as those defined by the <a href="http://www.w3.org/">World Wide Web Consortium</a>.  Standards help in two ways: by providing a detailed communication protocol whose details have already been hammered out, and also by allowing programs to interoperate with many other programs without having to support a separate protocol for each of them.  In fact, standard protocols often have standard implementations, so that you won't have to code up the details yourself as you did in the previous project.  For example, Python has built-in support for a number of standard protocols, including HTTP (HyperText Transfer Protocol, the protocol that your browser uses to download wbe pages) among others.</p>
+
+<p>HTTP is of particular importance nowadays, since it is the protocol that is used for virtually all communications on the web.  This is not limited only to the conversation that your browser has with a web server in order to download a web page, though that conversation certainly uses HTTP.  HTTP is the protocol that underlies a growing variety of program-to-program communications using web protocols, broadly called <i>web services</i>, where web sites or other software systems communicate directly with one another, or where programs other than web browsers fetch data from and affect change on web sites or other software systems.  Fortunately, since HTTP support is built directly into Python, we can write programs that use web-based APIs without having to handle low-level details of the protocol, though there are some details that you'll need to be familiar with if you want to use the provided implementation effectively.</p>
+
+<p>This project gives you the opportunity to explore a small part of the vast sea of possibilities presented by web APIs and web services, namely that of using historical stock prices to look for interesting patterns that might have led one to profitably buy or sell stocks at certain times.  Having completed this project, you'll have taken a valuable first step toward being able to write Python programs that interact with web services.</p>
+
+</div>
+
+<div class="section">
+
+<hr>
+
+<p class="title">Reminder: Do not select a partner</p>
+
+<p>Unlike the previous projects, which required that you use the pair programming technique, this project <i>requires that you work individually</i>.  So you will not be selecting a partner and you will not be doing pair programming this time; each student is responsible for his or her own project submission for this project.  While we do believe that pair programming offers a lot of benefits, you'll also need to build your skills at working on your own, as future coursework (and possibly future employment) will depend on them.</p>
+
+</div>
+
+<div class="section">
+
+<hr>
+
+<p class="title">The program</p>
+
+<p>For this project, you will write a program that is capable of loading a set of historical stock prices from either a local file or from the web, calculate a few metrics on those prices, and ultimately report on opportune times to buy or sell the stock, based on one of a few buying-and-selling strategies.</p>
+
+<p class="subtitle">Some background on the buying and selling stocks</p>
+
+<p>Many of you may know relatively little about investing, so this section offers the necessary background that you'll need for this project.</p>
+
+<p>First of all, <i>stocks</i> represent ownership in a business entity.  A given business entity, such as Apple, divides its overall ownership stake into <i>shares</i>.  For our purposes, you can think of each share as being a small, equal percentage of ownership of the company, though the arrangement can be more complex than this.  In the case of Apple, as of this writing, there are around 900,000,000 shares that are <i>publicly traded</i> (i.e., individuals like you and I can buy them, provided that someone else is selling).  Today, you or I could have bought one of those shares for around $450, which would have given us ownership of roughly 1/900,000,000th of the company.  (It should be noted that not nearly all companies in the world are publicly traded, but we'll focus our attention in this project on those that are.)</p>
+
+<p>Share prices in publicly-traded companies are determined via a <i>stock exchange</i>, where interested buyers and sellers meet (electronically, most of the time) and negotiate prices.  Buyers specify what they're willing to pay, sellers specify what they're willing to accept, and when there is a match between someone willing to buy for a certain amount and someone else willing to sell for that same amount, a <i>trade</i> takes place; the buyer exchanges money for shares.  Prices can be somewhat volatile; using the example of Apple's trading on the day of this writing, the price of one share ranged between $442 and $455 at different times during the day, with a total of around 17,000,000 shares changing hands just today.  (And just to show you how volatile those prices can be, that same share traded for $700 in September 2012 and just $85 at one point in 2008.)</p>
+
+<p>Stocks that trade on stock exchanges generally have a <i>symbol</i> (sometimes called a <i>ticker symbol</i>) associated with them, which is a shorthand name that is used to uniquely identify a company on that exchange.  In the United States, symbols are generally a sequence of uppercase letters; in some parts of the world, digits are also common.  For example, the symbol for Apple is AAPL, while Google's symbol is GOOG, and Microsoft's is MSFT.</p>
+
+<p>There are vast databases of every trade that was made in every stock every day: when the trade was completed, how many shares traded, the symbol identifying the stock that was traded, and at what price.  This is an overwhelming amount of data, and is not generally available online for free, since the data has so much potential value.</p>
+
+<p>However, it is possible to find <i>daily quotes</i> online; Yahoo is an example of a provider of this data.  For the most part, daily quotes will tell you the <i>closing price</i> — the final price at which a stock traded on a particular day.  They'll sometimes tell you other things, like the <i>opening price</i> (the price at which a stock first traded on a particular day), the highest and lowest price of the day, and the <i>volume</i>, which specifies how many shares traded during the course of the day.  While this doesn't seem like very much information, but some people and some programs do some fairly detailed analysis that has, as its core, only that data, along with various other "indicators" derived from it.  Your program for this project will derive a few indicators given a sequence of daily quotes.</p>
+
+<p>Trading does not take place every day.  Generally speaking, there are no trades on weekends or holidays.  Your program will not need to do anything special to handle that; it will simply determine from historical data which days included trading and which didn't.</p>
+
+<p class="subtitle">Asking the user to specify analysis options</p>
+
+<p>The goal of your program is to take as its input a sequence of daily quotes for a stock, then derive a collection of <i>buy signals</i> and <i>sell signals</i>, which are, respectively, recommendations to either buy or sell the stock on given days in the sequence.</p>
+
+<p>The program begins by presenting a console-mode user interface to the user, allowing the user to make a few decisions about the analysis that will be run.  The program runs a single analysis according to the user's specifications, then ends; if the user wants to run another analysis, he or she would run the program again.</p>
+
+<p>The user interface asks the user to specify the following:</p>
+
+<ul>
+  <li>The <i>ticker symbol</i> of the stock for which the analysis should be done.  For example, if the stock was Microsoft, the user would specify <b>MSFT</b>.  Allow the user to type a symbol; don't present a menu of choices.  That way, the program will stand the test of time (e.g., it won't need to be updated when new companies go public or existing companies go out of business).</li>
+  <li>The <i>start date</i> of the analysis.  The user should specify the date in the format <b>YYYY-MM-DD</b> (i.e., a four digit year, followed by a dash, followed by a two-digit month, followed by a dash, followed finally by a two-digit day).  So, for example, February 4, 2012 would be specified as <b>2012-02-04</b>.  The start date should be on or before today's date; if not, ask the user to specify another.</li>
+  <li>The <i>end date</i> of the analysis.  The user should specify the date in the format <b>YYYY-MM-DD</b>.  The end date should be on or before today's date, and should also be later than the start date; if not, ask the user to specify another.</li>
+  <li>The <i>signal strategy</i>, which determines the manner in which buy or sell signals will be generated.  Show a menu of options to the user and allow one of them to be selected and then configured.  The options are listed in the section titled <i>Signal strategies</i> below.</li>
+</ul>
+
+<p class="subtitle">Running the analysis</p>
+
+<p>Once these choices have been made, the program proceeds to download historical quotes from the web — which is described in more detail later in the writeup — and then prints a detailed report of daily prices, indicators, and buy/sell signals (if any) to the console.  After that, the program ends.</p>
+
+<p class="subtitle">Indicators</p>
+
+<p>The core of our analysis will be comparing daily prices against the values of <i>indicators</i>.  There are two kinds of indicators we'll use:</p>
+
+<ul>
+  <li><i>Simple moving average</i>.  The <i>N-day</i> simple moving average at the end of a particular day is the average of the previous N closing prices.  Days on which there is no trading are not counted.  So, for example, the <i>10-day simple moving average</i> each day is simply the average of the previous 10 closing prices.  Note that the simple moving average on a particular day <i>includes</i> that day's closing price.
+    <ul>
+      <li>One wrinkle to be aware of here: you need at least N days of prices before you can begin calculating a simple moving average.  So the first N - 1 days will not have a simple moving average at all.</li>
+    </ul>
+  </li>
+  <li><i>Directional indicator</i>.  The <i>N-day</i> directional indicator for a stock is the number of days out of the previous N on which the stock went up (i.e., it closed at a higher price than the previous close) <i>minus</i> the number of days out of the previous N on which the stock went down (i.e., closed at a lower price than the previous close).  It stands to reason, for example, that the <i>10-day directional indicator</i> will be somewhere between -10 and +10.  As with the simple moving average, the directional indicator for a particular day includes that day's closing price.
+    <ul>
+      <li>Unlike simple moving averages, directional indicators are always possible to calculate.  In a given report, the first day's indicator value will always be 0, because you don't know whether the stock's move that day was up or down (since you don't have the previous day's price).  When there are fewer than N days of prices, you simply calculate the directional indicator using the number of days you have available.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>There are many other indicators that are used by those people and programs making buying and selling decisions on stocks, but these are a good start for us.</p>
+
+<p class="subtitle">Signal strategies</p>
+
+<p>The main goal of the analysis is to generate <i>buy signals</i> and <i>sell signals</i>, which are recommendations to buy or sell stock at the conclusion of a particular day.  There are two strategies, corresponding to the indicators above:</p>
+
+<ul>
+  <li>Buy whenever the price moves above the <i>N-day simple moving average</i>; sell whenever the price moves below it.  The user chooses N (i.e., the number of days), with a smaller number of days being more sensitive (i.e., more likely to generate a signal) and a large number of days being less so.</li>
+  <li>Buy whenever the <i>N-day directional indicator</i> moves above a chosen value; sell whenever it moves below another chosen value.  The user chooses N (i.e., the number of days) and the buy and sell trigger values.</li>
+</ul>
+
+<p class="subtitle">The final report</p>
+
+<p>At the conclusion of the analysis, the program prints a <i>final report</i> that shows, for each day (in ascending order, from earlier days through later ones), the following:</p>
+
+<ul>
+  <li>The date</li>
+  <li>The closing price</li>
+  <li>The indicator used in the analysis (e.g., 10-day simple moving average)</li>
+  <li>A buy or sell signal for that day, if any</li>
+</ul>
+
+<p>The format of the report follows, assuming a 5-day directional indicator was used in the analysis, and assuming that buy signals are generated whenever the directional indicator passes above +2 and sell signals are generated whenever the directional indicator passes below 0.</p>
+
+<blockquote><pre>SYMBOL: BOO
+STRATEGY: Directional, buy above +2, sell below 0
+
+DATE        CLOSE       INDICATOR   SIGNAL
+2011-11-11  570.00      0           
+2011-11-14  580.00      +1          
+2011-11-15  590.00      +2          
+2011-11-16  600.00      +3          BUY
+2011-11-17  590.00      +2
+2011-11-18  580.00      +1
+2011-11-21  570.00      -1          SELL
+2011-11-22  560.00      -3          
+2011-11-23  570.00      -3          
+</pre></blockquote>
+
+</div>
+
+<div class="section">
+
+<hr>
+
+<p class="title">Downloading historical stock quotes from Yahoo Finance</p>
+
+<p>Yahoo Finance provides downloadable historical stock quotes for a wide variety of stocks.  They can be downloaded by making HTTP requests, which means you can make these requests manually in a browser, but also (and more importantly, in the context of this project) from a Python program.  The trick is to know how to format the request; in this particular case, it's necessary to place information into the URL that specifies the stock for which you want quotes, as well as the range of dates.</p>
+
+<p>The format of the URL is this:</p>
+
+<ul>
+  <li><b>http://ichart.yahoo.com/table.csv?s=<i>SYMBOL</i>&amp;a=<i>START_MONTH</i>&amp;b=<i>START_DAY</i>&amp;c=<i>START_YEAR</i>&amp;d=<i>END_MONTH</i>&amp;e=<i>END_DAY</i>&amp;f=<i>END_YEAR</i>&amp;g=d</b></li>
+</ul>
+
+<p>Where:</p>
+
+<ul>
+  <li><i>SYMBOL</i> is the symbol for which you'd like quotes (e.g., AAPL if you want quotes for Apple)</li>
+  <li><i>START_MONTH</i> is <i>one less</i> than the number of the start month (so 0 for January, 1 for February, ..., 11 for December)</li>
+  <li><i>START_DAY</i> is the starting day of the month</li>
+  <li><i>START_YEAR</i> is the starting year</li>
+  <li><i>END_MONTH</i> is <i>one less</i> than the number of the end month (again, 0 for January, 1 for February, ..., 11 for December)</li>
+  <li><i>END_DAY</i> is the ending day of the month</li>
+  <li><i>END_YEAR</i> is the ending year</li>
+  <li>Note that the <b>g=d</b> parameter means that you want daily quotes.  There are other time frames available, such as weekly, but we won't use those in this project.</li>
+</ul>
+
+<p>So, as an example, if you wanted quotes for Google running from March 1, 2011 through November 30, 2012, you would formulate the URL like this:</p>
+
+<ul>
+  <li><b>http://ichart.yahoo.com/table.csv?s=GOOG&amp;a=2&amp;b=1&amp;c=2011&amp;d=10&amp;e=30&amp;f=2012&amp;g=d</b></li>
+</ul>
+
+<p>Try copying and pasting that link into your browser.  You'll receive a <b>.csv</b> file in return.  Open that file in a text editor — be careful, because double-clicking it may open it in a different program, such as a spreadsheet, but you want to see what the text looks like.  Your program will need to parse this and extract the daily quotes from it, so take a little while to inspect the file and see what it looks like.</p>
+
+<p class="subtitle">Downloading web data from Python programs</p>
+
+<p>We will see, in lecture, a <a href="http://www.ics.uci.edu/~thornton/ics32/ProjectGuide/Project3/CodeExamples">code example</a> that demonstrates how to do this; in the meantime, you might find the <b>urllib.request</b> library a handy place to look, though you can also defer solving this problem until a little further down the road.  (See the next section of the write-up for some design advice.)</p>
+
+<p>Be a little bit careful what kind of advice you follow by doing Google searches, as the techniques for downloading web data from Python programs have changed quite a bit more one version of Python to the next, so stale advice is going to cause you more problems than it will solve.</p>
+
+</div>
+
+<div class="section">
+
+<hr>
+
+<p class="title">Design requirements and advice</p>
+
+<p>As with the previous project, you'll be required to write your program in multiple Python modules (i.e., multiple <b>.py</b> files), each encapsulating a different major part of the program.  These modules would be a good way to break this problem down into component parts:</p>
+
+<ul>
+  <li>A module that implements the two indicators.  These are probably best implemneted as functions that take a list of prices, in ascending order of date, and whatever other necessary parameters you think they need (e.g., the number of days for the simple moving average) and returns a list of the indicator's value on each date represented in the list of prices.</li>
+  <li>A module that implements the signal strategies.  These must be implemented as <i>classes</i>; see below.</li>
+  <li>A module that is capable of downloading quotes from Yahoo Finance.  (You might also want a separate module that allows you to load them from a file, or that simply hard-codes a set of quotes you can use to test with.  That way, you can make your entire program work <i>except</i> for downloading quotes from Yahoo Finance, then plug in the quote-downloading part at the end.)</li>
+  <li>A module implementing your user interface.  This is the only module that should have an <b>if __name__ == '__main__'</b> block to make it executable; you would execute this module to run your program.</li>
+</ul>
+
+<p class="subtitle">Signal strategies as classes</p>
+
+<p>Each of your signal strategies is required to be implemented as a Python <i>class</i>, which contains attributes that configure it (e.g., for the simple-moving-average-based strategy, an attribute would store the number of days to use in the average calculation), and an <b>execute</b> method that executes the strategy against a list of price quotes.  Both of your strategy classes must have an <b>execute</b> method with the same signature (i.e., the same name, the same parameters, and the same type of return value), so that your user interface could call into it without depending on which kind of signal strategy object it is.  (This is a key benefit in using classes in Python; we can treat different kinds of objects with similar capabilities the same way, which avoids us having to use <b>if</b> statements to differentiate.  We'll see an example of this in lecture.)</p>
+
+<p class="subtitle">Where should I start?</p>
+
+<p>There are lots of ways to start this project, but your goal, as always, is to find stable ground as often as possible.  One problem you know you'll need to solve is the problem of calculating a simple moving average; I'd consider starting with that.  You can test this from the Python interpreter before proceeding, and then you're on stable ground.  Continue with the other indicator, the directional indicator.  Now you're on stable ground again.</p>
+
+<p>From there, you might continue by implementing a module that gives you a set of test quotes.  You won't want to submit this one, but it will be useful in allowing you to continue your work without handling the downloading of quotes from Yahoo Finance right away.  This might allow you to continue by implementing and testing your signal strategies.</p>
+
+<p>Once you've got these implemented, you might continue with the quote-downloading feature, and, finally, the user interface.  It may seem strange to build the user interface last, and you certainly don't have to follow this sequence, but this is the sequence I would be most likely to follow.</p>
+
+</div>
+
+<div class="section">
+
+<hr>
+
+<p class="title">A note about the signal strategies presented here</p>
+
+<p>The strategies used here to determine whether to buy or sell stocks are chosen more for their ability to be implemented using skills you have, as opposed to being designed as sound investing strategies.  It is not uncommon for programs to use historical price quotes — often over multiple time frames, in addition to daily — to make buying and selling decisions in place of people, and the things we're doing here form a very loose basis for how some of those decisions get made, but the algorithms for making these decisions are generally more complex and tend to vary over time; what works today may no longer work a year from now when people's behavior, as well as the behavior of other automated buying-and-selling programs, may have changed.</p>
+
+</div>
+
+<div class="section">
+
+<hr>
+
+<p class="title">Deliverables</p>
+
+<p>Put your name and student ID in a comment at the top of each of your <b>.py</b> files, then submit all of the files to Checkmate.  Take a moment to be sure that you've submitted all of your files.</p>
+
+<p>Follow <a href="http://www.ics.uci.edu/~thornton/ics32/ProjectGuide/SubmittingProjects.html">this link</a> for a discussion of how to submit your project via Checkmate.  Be aware that I'll be holding you to all of the rules specified in that document, including the one that says that you're responsible for submitting the version of the project that you want greaded.  We won't regrade a project simply because you submitted the wrong version accidentally.</p>
+
+<p class="subtitle">Can I submit after the deadline?</p>
+
+<p>Yes, it is possible, subject to the late work policy for this course, which is described in the section titled <i>Late work</i> at <a href="http://www.ics.uci.edu/~thornton/ics32/ProjectGuide/index.html">this link</a>.</p>
+
+</div>
+
+<div class="history">
+
+<hr>
+
+<ul class="nomarker">
+  <li>Originally written by Alex Thornton, Winter 2013.</li>
+</ul>
+
+</div>
+
+
+
+</body></html>

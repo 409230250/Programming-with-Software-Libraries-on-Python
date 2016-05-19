@@ -1,0 +1,157 @@
+body {
+	background-color: #d0d0ff;
+	color: #000000;
+	font-family: Arial, serif;
+	font-size: 11pt;
+    line-height: 1.3;
+}
+
+pre {
+    white-space: pre;
+    font-family: Consolas, Courier New, monospace;
+    font-size: 11pt;
+}
+
+tt {
+	white-space: pre;
+	font-family: Consolas, Courier New, monospace;
+	font-size: 11pt;
+}
+
+a:link {
+	color: #0000a0;
+	background-color: inherit;
+}
+
+a:visited {
+	color: #004000;
+	background-color: inherit;
+}
+
+a:hover {
+	color: #006000;
+	background-color: inherit;
+}
+
+blockquote {
+	font-family: Arial, sans-serif;
+	font-size: 9pt;
+}
+
+hr {
+	height: 1px;
+	width: 100%;
+	color: #000040;
+	background-color: #000040;
+	border: 0px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+ul.nomarker {
+	list-style: none;
+	margin-left: 0px;
+	padding-left: 0px;
+}
+
+ul.nomarker li {
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+}
+
+div.navbar p {
+	color: #000040;
+	background-color: inherit;
+	font-family: Arial, sans-serif;
+	font-size: 9pt;
+	text-align: center;
+}
+
+div.main {
+	clear: both;
+	float: bottom;
+}
+
+div.header P {
+	color: #000040;
+	background-color: inherit;
+	font-family: Arial, sans-serif;
+	font-size: 18pt;
+	font-weight: bold;
+	text-align: center;
+}
+
+div.section p.title {
+	color: #000080;
+	background-color: inherit;
+	font-family: Arial, sans-serif;
+	font-size: 14pt;
+	font-style: italic;
+	font-weight: bold;
+}
+
+div.section p.subtitle {
+	color: #000080;
+	background-color: inherit;
+	font-family: Arial, sans-serif;
+	font-size: 12pt;
+	font-style: normal;
+	font-weight: bold;
+}
+
+div.section p.center {
+	text-align: center;
+}
+
+div.history {
+	font-family: Arial, sans-serif;
+	font-size: 8pt;
+}
+
+table.normal {
+	border: 1px;
+	border-collapse: collapse;
+	border-style: solid;
+	border-color: black;
+	border-spacing: 0px;
+	empty-cells: show;
+	font-family: Arial, sans-serif;
+	font-size: 10pt;
+}
+
+table.normal tr.top td {
+	color: white;
+	background-color: #000080;
+	font-style: italic;
+	font-weight: bold;
+}
+
+table.normal tr.divider td {
+	color: black;
+	background-color: #8080ff;
+	font-style: italic;
+	font-weight: bold;
+}
+
+table.normal td {
+	color: black;
+	background-color: #e0e0ff;
+	border: 1px;
+	border-style: solid;
+	border-color: black;
+	padding: 5px;
+}
+
+table.normal td ul.nomarker {
+	list-style: none;
+	margin-left: 0px;
+	padding-left: 0px;
+	margin-top: 0px;
+	padding-top: 3px;
+	margin-bottom: 0px;
+	padding-bottom: 3px;
+}
+
+table.normal td.right-align {
+	text-align: right
+}
